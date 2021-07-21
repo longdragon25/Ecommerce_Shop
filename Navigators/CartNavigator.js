@@ -1,13 +1,34 @@
-import { Text, View } from 'react-native'
-
+import Cart from '../Screens/Cart/Cart';
 import React from 'react'
+import { createStackNavigator } from "@react-navigation/stack"
 
-const CartNavigator = () => {
-    return (
-        <View>
-            <Text>Cart</Text>
-        </View>
+// import CheckoutNavigator from './CheckoutNavigator';
+
+
+
+const Stack = createStackNavigator();
+
+function MyStack() {
+    return(
+        <Stack.Navigator>
+            <Stack.Screen 
+                name="Cart"
+                component={Cart}
+                options={{
+                    headerShown: false
+                }}
+            />
+            {/* <Stack.Screen 
+                name="Checkout"
+                component={CheckoutNavigator}
+                options={{
+                    title: 'Checkout'
+                }}
+            /> */}
+        </Stack.Navigator>
     )
 }
 
-export default CartNavigator
+export default function CartNavigator() {
+    return <MyStack />
+}

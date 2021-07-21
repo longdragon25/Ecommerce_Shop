@@ -1,3 +1,5 @@
+import * as actions from "../../Redux/Actions/cartActions";
+
 import {
     Button,
     Dimensions,
@@ -9,11 +11,14 @@ import {
 
 import EasyButton from "../../Shared/StyledComponents/EasyButton"
 import React from 'react'
+import Toast from 'react-native-toast-message'
+import { useDispatch } from 'react-redux';
 
 var { width } = Dimensions.get("window");
 
 const ProductCard = (props) => {
     const { name, price, image, countInStock } = props;
+    const dispatch = useDispatch();
 
     return (
         <View style={styles.container}>
@@ -37,13 +42,7 @@ const ProductCard = (props) => {
                     primary
                     medium
                     onPress={() => {
-                        props.addItemToCart(props.id),
-                        Toast.show({
-                            topOffset: 60,
-                            type: "success",
-                            text1: `${name} added to Cart`,
-                            text2: "Go to your cart to complete order"
-                        })
+                        dispatch(actions.addToCart({quantity: 1, product: props}));
                     }}
                     >
                         <Text style={{ color: "white"}}>Add</Text>

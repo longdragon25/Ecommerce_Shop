@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 
 import AdminNavigator from "./AdminNavigator";
+import CartIcon from "../Shared/CartIcon";
 import CartNavigator from "./CartNavigator";
 import HomeNavigator from "./HomeNavigator";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -35,7 +36,11 @@ const Main = () => {
         component={CartNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <Icon name="shopping-cart" color={color} size={30} />
+            <View>
+              <Icon name="shopping-cart" color={color} size={30} />
+              <CartIcon/>
+            </View>
+            
           ),
         }}
       />

@@ -1,3 +1,5 @@
+import * as actions from "../../Redux/Actions/cartActions";
+
 import { Button, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Container, H1, Left, Right } from 'native-base';
 import React, { useEffect, useState } from 'react'
@@ -5,11 +7,13 @@ import React, { useEffect, useState } from 'react'
 import EasyButton from '../../Shared/StyledComponents/EasyButton'
 import Toast from 'react-native-toast-message';
 import TrafficLight from '../../Shared/StyledComponents/TrafficLight'
+import { useDispatch } from 'react-redux';
 
 const SingleProduct = (props) => {
     const [item, setItem] = useState(props.route.params.item);
     const [availability, setAvailability] = useState(null);
     const [availabilityText, setAvailabilityText] = useState("")
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (props.route.params.item.countInStock == 0) {
@@ -65,7 +69,7 @@ const SingleProduct = (props) => {
                    <EasyButton 
                    primary
                    medium
-                   onPress={() => {props.addItemToCart(item.id),
+                   onPress={() => {dispatch(actions.addToCart({quantity: 1, product: props})),
                         Toast.show({
                             topOffset: 60,
                             type: "success",
