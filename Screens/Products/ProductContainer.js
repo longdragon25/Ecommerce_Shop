@@ -7,15 +7,15 @@ import {
   View,
 } from "react-native";
 import { Container, Header, Icon, Input, Item, Text } from "native-base";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import Banner from "../../Shared/Banner";
 import CategoryFilter from "./CategoryFilter";
 import ProductList from "./ProductList"
 import SearchedProduct from "./SearchedProduct";
-
-const data = require("../../assets/data/products.json");
-const category = require("../../assets/data/categories.json");
+import axios from "axios";
+import baseURL from "../../assets/common/baseUrl";
+import { useFocusEffect } from '@react-navigation/native'
 
 var { height, width } = Dimensions.get("window");
 
@@ -29,25 +29,48 @@ const ProductContainer = (props) => {
   const [initialState, setInitialState] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setFocus(false);
-    setActive(-1);
-    setProducts(data);
-    setProductsFiltered(data);
-    setProductsCtg(data);
-    setInitialState(data);
-    setLoading(false);
-    setCategories(category);
-
-    return () => {
-      setProducts([]);
-      setProductsFiltered([]);
-      setFocus();
-      setCategories([]);
-      setActive();
-      setInitialState();
-    };
-  }, []);
+  useFocusEffect((
+    useCallback(
+      () => {
+        setFocus(false);
+        setActive(-1);
+        
+        // Products
+        axios
+          .get(`${baseURL}products`)
+          .then((res) => {
+            setProducts(res.data);
+            setProductsFiltered(res.data);
+            setProductsCtg(res.data);
+            setInitialState(res.data);
+            setLoading(false)
+          })
+          .catch((error) => {
+            console.log('Api call error')
+          })
+    
+        // Categories
+        axios
+          .get(`${baseURL}categories`)
+          .then((res) => {
+            setCategories(res.data)
+          })
+          .catch((error) => {
+            console.log('Api call error')
+          })
+    
+        return () => {
+          setProducts([]);
+          setProductsFiltered([]);
+          setFocus();
+          setCategories([]);
+          setActive();
+          setInitialState();
+        };
+      },
+      [],
+    )
+  ))
 
   // Product Methods
   const searchProduct = (text) => {
@@ -71,7 +94,7 @@ const ProductContainer = (props) => {
         ? [setProductsCtg(initialState), setActive(true)]
         : [
             setProductsCtg(
-              products.filter((i) => i.category.$oid === ctg),
+              products.filter((i) => i.category._id === ctg),
               setActive(true)
             ),
           ];
@@ -79,7 +102,9 @@ const ProductContainer = (props) => {
   };
 
   return (
-    <View>
+    <>
+    {loading == false ? (
+      <View>
       <View style={styles.header}>
         <Icon name="ios-search" size={20} />
         <Input
@@ -128,6 +153,12 @@ const ProductContainer = (props) => {
         </ScrollView>
       )}
     </View>
+    ):(
+      <Container style={[styles.center, { backgroundColor: "#f2f2f2" }]}>
+        <ActivityIndicator size="large" color="red" />
+      </Container>
+    )}
+  </>
   );
 };
 

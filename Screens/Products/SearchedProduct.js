@@ -1,5 +1,5 @@
 import { Body, Content, Left, ListItem, Text, Thumbnail } from 'native-base';
-import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import React from 'react';
 
@@ -8,14 +8,14 @@ var { width } = Dimensions.get("window")
 const SearchedProduct = (props) => {
     const { productsFiltered } = props;
     return(
-        <View>
+        <ScrollView>
             {productsFiltered.length > 0 ? (
                 productsFiltered.map((item) => (
                     <ListItem
                         onPress={() => {
                             props.navigation.navigate("Product Detail", {item: item})
                         }}
-                        key={item._id.$oid}
+                        key={item._id}
                         avatar
                     >
                         <Left>
@@ -38,7 +38,7 @@ const SearchedProduct = (props) => {
                     </Text>
                 </View>
             )}
-        </View>          
+        </ScrollView>          
     );
 };
 
